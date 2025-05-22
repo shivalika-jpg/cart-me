@@ -17,7 +17,7 @@
     async function loadFriendCart() {
       const urlParams = new URLSearchParams(window.location.search);
       const friendId = urlParams.get("id");
-      const res = await fetch(`http://localhost:5000/api/friends/${friendId}/cart`, {
+      const res = await fetch(`https://cart-me.onrender.com/api/friends/${friendId}/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const items = await res.json();
