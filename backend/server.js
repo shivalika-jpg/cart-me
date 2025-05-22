@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 // 🔐 CORS setup for your frontend
 app.use(cors({
-  origin: ['http://127.0.0.1:5500', 'http://localhost:5500'], // front-end ports
+  origin: ['http://127.0.0.1:5500', 'http://localhost:5500','https://cart-me.vercel.app/'], // front-end ports
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
