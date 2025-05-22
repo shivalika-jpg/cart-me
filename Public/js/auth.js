@@ -1,4 +1,4 @@
-const backendBaseURL = "http://localhost:5000"; // adjust if needed
+const backendBaseURL = "https://cart-me.onrender.com"; 
 
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const username = document.getElementById("username").value;  // use username instead
