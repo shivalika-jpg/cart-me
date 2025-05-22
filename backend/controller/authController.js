@@ -1,9 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey'; // use .env in prod
+const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey'; 
 
-// Helper to generate token
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
     expiresIn: '1d',
@@ -12,12 +11,11 @@ const generateToken = (user) => {
 
 exports.register = async (req, res) => {
   try {
-    const { username, password, email } = req.body; // add email here
+    const { username, password, email } = req.body; 
 
     if (!username || !password || !email)
       return res.status(400).json({ message: 'Username, password, and email are required' });
 
-    // Check if username OR email already exists
     const existingUser = await User.findOne({
       $or: [{ username }, { email }]
     });
@@ -29,7 +27,7 @@ exports.register = async (req, res) => {
       }
     }
 
-    const user = new User({ username, password, email }); // pass email here
+    const user = new User({ username, password, email }); 
     await user.save();
 
     const token = generateToken(user);
