@@ -19,7 +19,7 @@ async function fetchProduct() {
   if (!url) return alert("Enter a product URL");
 
   try {
-    const response = await fetch("http://localhost:5000/api/cart/add", {
+    const response = await fetch("https://cart-me.onrender.com/api/cart/add", {
       method: "POST",
       headers: { "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
