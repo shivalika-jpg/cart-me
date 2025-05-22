@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fashion Cart</title>
+  <link rel="stylesheet" href="../css/category.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">ACCESSORIES</h1>
+    <div id="cartContainer" class="cart-container">
+      <div class="card add-card" onclick="openModal()">
+        <div class="plus">+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Add Item</h2>
+    <input type="text" id="productURL" placeholder="Paste product URL" />
+    <button onclick="fetchProduct()">Fetch</button>
+
+    <!-- Manual Entry Message -->
+    <p id="manualMessage" class="hidden fetch-fail-msg">Couldn't fetch data, enter data manually</p>
+
+    <!-- Manual Entry Form -->
+    <div id="manualInput" class="manual hidden">
+      <input type="text" id="productName" placeholder="Enter product name">
+      <input type="file" id="productImage">
+      <button onclick="addManualItem()">Add Item</button>
+    </div>
+  </div>
+</div>
+
+
+  <script src="../js/script.js"></script>
+</body>
+</html>

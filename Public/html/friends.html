@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Friends</title>
+  <link rel="stylesheet" href="../css/friends.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>FRIEND LIST</h2>
+      <ul id="friendList"></ul> <!-- ✅ Added -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div class="find-friend">
+        <input type="text" placeholder="FIND FRIEND" id="friendUsername" />
+        <button onclick="sendFriendRequest()"></button>
+      </div>
+
+      <p id="sendStatus"></p>
+
+      <h3>Incoming Friend Requests</h3>
+      <ul id="incomingRequests"></ul> <!-- ✅ Added -->
+    </div>
+
+  </div>
+  <script src="../js/friends.js"></script>
+</body>
+</html>

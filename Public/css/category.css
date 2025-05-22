@@ -1,0 +1,148 @@
+body {
+  font-family: Georgia, serif;
+  background-color: #f2e6aa;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 40px;
+  text-align: center;
+}
+
+.title {
+  background-color: gold;
+  padding: 15px 30px;
+  display: inline-block;
+  border: 2px solid black;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+.cart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  width: 180px;
+  height: 200px;
+  border: 3px solid black;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  flex-direction: column;
+}
+
+.plus {
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.add-card {
+  background-color: #fdf5d4;
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-bottom: 1px solid #ccc;
+  border-radius: 22px 22px 0 0;
+}
+
+.card span {
+  padding: 10px;
+  font-weight: bold;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.modal-content input {
+  margin: 10px 0;
+  padding: 8px;
+  width: 90%;
+  font-size: 16px;
+}
+
+.modal-content button {
+  padding: 8px 15px;
+  font-size: 16px;
+  background-color: gold;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.close {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+.remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  color: red;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.card {
+  position: relative;
+  width: 150px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin: 10px;
+  background-color: #fff;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.fetch-fail-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
