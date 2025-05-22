@@ -2,7 +2,7 @@ const token = localStorage.getItem('token');
 
 async function sendFriendRequest() {
   const username = document.getElementById('friendUsername').value;
-  const res = await fetch('http://localhost:5000/api/friends/request', {
+  const res = await fetch('https://cart-me.onrender.com/api/friends/request', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ async function sendFriendRequest() {
 
 // Load incoming friend requests
 async function loadIncomingRequests() {
-  const res = await fetch('http://localhost:5000/api/friends/requests', {
+  const res = await fetch('https://cart-me.onrender.com/api/friends/requests', {
     headers: { Authorization: `Bearer ${token}` }
   });
   const requests = await res.json();
@@ -37,7 +37,7 @@ async function loadIncomingRequests() {
 
 // Accept/Reject a friend request
 async function respondRequest(requestId, action) {
-  const res = await fetch('http://localhost:5000/api/friends/respond', {
+  const res = await fetch('https://cart-me.onrender.com/api/friends/respond', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ async function respondRequest(requestId, action) {
 
 // Load friends list and render with Remove button
 async function loadFriends() {
-  const res = await fetch('http://localhost:5000/api/friends/list', {
+  const res = await fetch('https://cart-me.onrender.com/api/friends/list', {
     headers: { Authorization: `Bearer ${token}` }
   });
   const friends = await res.json();
@@ -85,7 +85,7 @@ async function removeFriend(friendId, friendUsername) {
   const confirmed = confirm(`Are you sure you want to remove ${friendUsername} from your friends?`);
   if (!confirmed) return;
 
-  const res = await fetch('http://localhost:5000/api/friends/remove', {
+  const res = await fetch('https://cart-me.onrender.com/api/friends/remove', {
     method: 'POST', // or 'DELETE' if your backend supports it
     headers: {
       'Content-Type': 'application/json',
