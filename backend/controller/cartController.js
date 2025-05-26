@@ -70,19 +70,61 @@ exports.getUserCart = async (req, res) => {
   }
 };
 
-
 exports.removeItemFromCart = async (req, res) => {
   try {
+    console.log('Remove item request received');
+    console.log('Request headers:', req.headers);
+    console.log('Request user:', req.user);
+    console.log('Request params:', req.params);
+
+    // Validate input
     const userId = req.user.id;
     const itemId = req.params.id;
+    
+    if (!userId || !itemId) {
+      console.log('Missing required parameters');
+      return res.status(400).json({ message: 'User ID or Item ID is missing' });
+    }
 
-    const item = await CartItem.findOne({ _id: itemId, user: userId });
-    if (!item) return res.status(404).json({ message: 'Item not found' });
+    // Validate item ID format
+    if (!/^\w{24}$/.test(itemId)) {
+      console.log('Invalid item ID format:', itemId);
+      return res.status(400).json({ message: 'Invalid item ID format' });
+    }
 
-    await item.remove();
-    res.json({ message: 'Item removed' });
+    // Find and remove the item
+    const result = await CartItem.deleteOne({ _id: itemId, user: userId });
+    console.log('Delete result:', result);
+    
+    if (result.deletedCount === 0) {
+      console.log('No item found or unauthorized');
+      return res.status(404).json({ message: 'Item not found or unauthorized' });
+    }
+
+    console.log('Item removed successfully');
+    res.json({ message: 'Item removed successfully' });
   } catch (error) {
-    console.error('Error removing item:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error removing item:', {
+      error: error.message,
+      stack: error.stack,
+      user: req.user,
+      params: req.params
+    });
+    
+    // Handle specific errors
+    if (error.name === 'CastError') {
+      console.log('Cast error detected');
+      return res.status(400).json({ message: 'Invalid item ID format' });
+    }
+    
+    console.log('Sending 500 error response');
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
   }
 };
+
+
+
+

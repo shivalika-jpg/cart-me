@@ -13,6 +13,7 @@
         <img src="./icon.png" alt="Profile" class="profile-icon" title="Your Profile" />
         <button class="add-friend-btn"></button>
         <button class="add-friend-btn" onclick="goToPage('friends.html')">➕ Add Friend</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
       </div>
       <h1 class="title">WHAT DO WE WANNA ADD TO OUR CART TODAY?</h1>
     </header>
@@ -49,7 +50,53 @@
   </div>
 
   <script>
+    // Configure API base URL based on environment
+    const isLocal = window.location.hostname === 'localhost';
+    const API_BASE_URL = isLocal ? 'http://localhost:5000' : 'https://cart-me.onrender.com';
+
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    // Logout function
+    async function logout() {
+      try {
+        // First clear the token
+        localStorage.removeItem('token');
+        
+        // Try to make the logout request
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+          });
+
+          if (!response.ok) {
+            console.error('Server response:', response.status, response.statusText);
+          }
+        } catch (fetchError) {
+          console.error('Fetch error:', fetchError);
+        }
+
+        // Redirect to login regardless of server response
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
+      }
+    }
+
+    // Navigate to other pages while maintaining authentication
     function goToPage(page) {
+      if (!localStorage.getItem('token')) {
+        alert('Please log in first');
+        return;
+      }
       window.location.href = page;
     }
   </script>

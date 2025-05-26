@@ -26,6 +26,16 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(cors({
   origin: ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://cart-me.vercel.app'], 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  
+  origin: function (origin, callback) {
+    // Allow requests from localhost and 127.0.0.1 with any port
+    if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+      callback(null, true);
+    } else {
+      // For production, only allow from cart-me.vercel.app
+      callback(null, origin === 'https://cart-me.vercel.app');
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // include OPTIONS for preflight
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));

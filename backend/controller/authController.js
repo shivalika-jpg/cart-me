@@ -58,3 +58,26 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.logout = async (req, res) => {
+  try {
+    // For JWT, we don't need to do anything on the server side
+    // since tokens are stateless. We just need to clear it on the client side.
+    // However, we can still verify the token if needed
+    
+    // Verify token if present
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.replace('Bearer ', '');
+      try {
+        jwt.verify(token, JWT_SECRET);
+      } catch (error) {
+        return res.status(401).json({ message: 'Invalid token' });
+      }
+    }
+
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

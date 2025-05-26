@@ -2,6 +2,12 @@ const token = localStorage.getItem('token');
 
 async function sendFriendRequest() {
   const username = document.getElementById('friendUsername').value;
+  
+  if (!username) {
+    alert('Please enter a username');
+    return;
+  }
+
   const res = await fetch('https://cart-me.onrender.com/api/friends/request', {
     method: 'POST',
     headers: {
@@ -12,7 +18,13 @@ async function sendFriendRequest() {
   });
 
   const data = await res.json();
-  document.getElementById('sendStatus').innerText = data.message || "Error sending request";
+  
+  if (res.ok) {
+    alert(data.message || 'Friend request sent successfully');
+  } else {
+    alert(data.message || 'Failed to send friend request');
+  }
+
   document.getElementById('friendUsername').value = '';
   loadIncomingRequests();
 }
@@ -97,10 +109,10 @@ async function removeFriend(friendId, friendUsername) {
   const data = await res.json();
 
   if (res.ok) {
-    document.getElementById('sendStatus').textContent = `Removed ${friendUsername} from friends.`;
+    alert(`Removed ${friendUsername} from friends.`);
     loadFriends();
   } else {
-    alert(data.message || 'Failed to remove friend.');
+    alert(data.message || 'Failed to remove friend');
   }
 }
 
