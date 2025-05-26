@@ -1,7 +1,13 @@
 const modal = document.getElementById("modal");
-const cartContainer = document.getElementById("cartContainer");
 const manualInput = document.getElementById("manualInput");
 const token = localStorage.getItem("token");
+
+// Helper function to get current category number
+function getCategoryNumber() {
+  const path = window.location.pathname;
+  const match = path.match(/category(\d+)/);
+  return match ? match[1] : 1;
+}
 
 // Configure API base URL based on environment
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -30,20 +36,20 @@ async function fetchProduct() {
   if (!url) return alert("Enter a product URL");
 
   try {
-    const response = await fetch("https://cart-me.onrender.com/api/cart/add", {
+    const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ url, category: getCategoryNumber() }),
     });
 
     const data = await response.json();
     console.log("Fetched data:", data);
 
-    if (data && typeof data.image === "string" && typeof data.name === "string") {
-      addItemToCart(data.image, data.name, data.url, data._id);
+    if (response.ok && data && typeof data.image === "string" && typeof data.name === "string") {
+      addItemToCart(data.image, data.name, data.url, data._id, data.category);
       closeModal();
     } else {
       console.warn("Response missing image or name, showing manual input");
@@ -56,7 +62,7 @@ async function fetchProduct() {
 }
 
 // Manual product entry
-function addManualItem() {
+async function addManualItem() {
   const name = document.getElementById("productName").value.trim();
   const imageInput = document.getElementById("productImage");
 
@@ -64,17 +70,44 @@ function addManualItem() {
     return alert("Please fill in both fields");
   }
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    addItemToCart(e.target.result, name, "#"); // No backend ID
-    closeModal();
-  };
-  reader.readAsDataURL(imageInput.files[0]);
+  try {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('image', imageInput.files[0]);
+    formData.append('category', getCategoryNumber());
+
+    const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      addItemToCart(data.image, data.name, data.url, data._id, getCategoryNumber());
+      closeModal();
+    } else {
+      throw new Error(data.message || 'Failed to add item');
+    }
+  } catch (error) {
+    console.error('Error adding manual item:', error);
+    alert('Failed to add item: ' + error.message);
+  }
 }
 
 // Add product to DOM
-function addItemToCart(imageSrc, name, productUrl = "#", itemId = null) {
+function addItemToCart(imageSrc, name, productUrl = "#", itemId = null, category) {
+  // Get the correct cart container for this category
+  const cartContainer = document.getElementById(`cartContainer${category}`);
+  if (!cartContainer) {
+    console.error(`Cart container not found for category ${category}`);
+    return;
+  }
   const card = document.createElement("div");
+  card.dataset.category = category;
   card.className = "card";
 
   // Remove button
@@ -135,6 +168,27 @@ function addItemToCart(imageSrc, name, productUrl = "#", itemId = null) {
 // Load saved cart on page load
 async function loadCartItems() {
   if (!token) return;
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/cart?category=${getCategoryNumber()}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    const items = await response.json();
+    if (!Array.isArray(items)) {
+      console.error("Invalid response format from server");
+      return;
+    }
+
+    items.forEach((item) => {
+      addItemToCart(item.image, item.name, item.url, item._id, item.category);
+    });
+  } catch (error) {
+    console.error("Error loading cart items:", error);
+  }
 
   try {
     const response = await fetch("https://cart-me.onrender.com/api/cart", {
@@ -156,4 +210,24 @@ async function loadCartItems() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", loadCartItems);
+window.addEventListener("DOMContentLoaded", () => {
+  // Initialize cart container and load items
+  const category = getCategoryNumber();
+  const cartContainer = document.getElementById(`cartContainer${category}`);
+  if (!cartContainer) {
+    console.error("Cart container not found for category", category);
+    return;
+  }
+  
+  // Initialize modal and other elements
+  const modal = document.getElementById("modal");
+  const manualInput = document.getElementById("manualInput");
+  const token = localStorage.getItem("token");
+  
+  if (!modal || !manualInput) {
+    console.error("Missing required DOM elements");
+    return;
+  }
+  
+  loadCartItems();
+});

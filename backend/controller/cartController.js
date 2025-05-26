@@ -19,10 +19,10 @@ async function fetchMetadata(url) {
 
 exports.addItemToCart = async (req, res) => {
   try {
-    const { url, name, image } = req.body;
+    const { url, name, image, category } = req.body;
     const userId = req.user.id;
 
-    if (!url) {
+    if (!url || !category) {
       return res.status(400).json({ message: 'URL is required' });
     }
 
@@ -47,6 +47,7 @@ exports.addItemToCart = async (req, res) => {
       url,
       name: finalName,
       image: finalImage,
+      category,
     });
 
     await newItem.save();
@@ -62,7 +63,7 @@ exports.addItemToCart = async (req, res) => {
 exports.getUserCart = async (req, res) => {
   try {
     const userId = req.user.id;
-    const items = await CartItem.find({ user: userId });
+    const items = await CartItem.find({ user: userId, category: req.query.category || { $exists: true } });
     res.json(items);
   } catch (error) {
     console.error('Error fetching user cart:', error);

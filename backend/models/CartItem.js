@@ -6,6 +6,7 @@ const CartItemSchema = new mongoose.Schema({
   image: { type: String },
   url: { type: String, required: true },
   price: { type: Number },
+  category: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
